@@ -27,7 +27,7 @@ class postac
 		if($szansa>=SK)
 			$zycieDef-=$silaAtak;
 		else
-			echo 'pud³o';
+			echo 'pudï¿½o';
 	}
 	function koniec_tury()
 	{
@@ -74,7 +74,7 @@ class wiedzmin extends postac
 			$this->zycie = $this->zycie + $zycie*($eliksir_poziom*10/100)
 			break;
 			default:
-			echo "wiedŸmin coœ pochendorzy³ i zamiast eliksiru novigradzej ¿ytniej ³ykn¹³";
+			echo "wiedï¿½min coï¿½ pochendorzyï¿½ i zamiast eliksiru novigradzej ï¿½ytniej ï¿½yknï¿½ï¿½";
 			break;
 		}
 	}
@@ -88,3 +88,4 @@ class stowrek extends postac
 {
 	
 }
+        ?>
