@@ -6,10 +6,9 @@ class  postac
     private $zrecznosc;
     private $zycie;
     private $AP;
-    mt_srand();
     private $szansa;
-    $szansa = mt_rand(100);
-    function _Construct($szybkosc, $sila, $zrecznosc, $zycie, $AP)
+
+    public function _Construct($szybkosc, $sila, $zrecznosc, $zycie, $AP)
     {
         $this->szybkosc=$szybkosc;
         $this->sila=$sila;
@@ -17,9 +16,9 @@ class  postac
         $this->zycie=$zycie;
         $this->AP=$AP;
     }
-    function atak($silaAtak, $zycieDef, $zrecznoscAtak, $zrecznoscDef)
+    public function atak($silaAtak, $zycieDef, $zrecznoscAtak, $zrecznoscDef)
     {
-
+        $szansa = mt_rand(100);
 		$SK= (($zrecznoscAtak-$zrecznoscDef) / $zrecznoscDef) * 100/100;
 		if($SK>90)
             $SK=90;
@@ -31,16 +30,16 @@ class  postac
         else
             echo 'pud�o';
 	}
-    function koniec_tury()
+    public function koniec_tury()
     {
 
     }
 }
-class eliksir
+c/*lass eliksir
 {
     private $nazwa;
     private $opis;
-    function _Construct($nazwa, $opis)
+    public function _Construct($nazwa, $opis)
     {
         $this->nazwa=$nazwa;
         $this->opis=$opis;
@@ -50,7 +49,7 @@ class eliksir
         echo 'eliskir: ' . $opis;
     }
 
-}
+}*/
 class wiedzmin extends postac
 {
     private $obrona;
@@ -62,12 +61,15 @@ class wiedzmin extends postac
         {
             case 1:
                 $this->eliksir=1;
+                $this->eliksir_poziom=mt_rand(1,3);
                 break;
             case 2:
                 $this->eliksir=2;
+                $this->eliksir_poziom=mt_rand(1,3);
                 break;
             case 3:
                 $this->eliksir=3;
+                $this->eliksir_poziom=mt_rand(1,3);
                 break;
             default:
                 echo "cos poszlo nie tak";
@@ -75,7 +77,7 @@ class wiedzmin extends postac
         }
 
     }
-    function wypicie_eliksiru()
+    public function wypicie_eliksiru($eliksir)
     {
         switch($eliksir)
         {
@@ -95,9 +97,13 @@ class wiedzmin extends postac
                 break;
         }
     }
-    function obrona()
+    public function obrona()
     {
 
+    }
+    public function przedstaw_sie()
+    {
+        echo $this->sila;
     }
 
 }
@@ -105,6 +111,9 @@ class stowrek extends postac
 {
 
 }
+
+//$geralt = new wiedzmin(20, 20 ,20 ,20, 0 );
+//$geralt->przedstaw_sie();
 
 
 ?>
