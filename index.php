@@ -15,10 +15,32 @@ class  postac
         $this->zrecznosc=$zrecznosc;
         $this->zycie=$zycie;
     }
-	public function zwieksz($sila)
+	public function zwieksz($ile, $co)
 	{
-	$this->sila=$sila;
+        switch($co)
+        {
+            case 1:
+                $this->szybkosc=$ile;
+                break;
+            case 2:
+                $this->sila=$ile;
+                break;
+            case 3:
+                $this->zrecznosc=$ile;
+                break;
+            case 4:
+                $this->zycie=$ile;
+                break;
+            case 5:
+                $this->AP=$ile;
+                break;
+        }
+
 	}
+    public function  wez($statystyka)
+    {
+        return $this->$statystyka;
+    }
     public function atak($silaAtak, $zycieDef, $zrecznoscAtak, $zrecznoscDef)
     {
         $szansa = mt_rand(100);
@@ -43,26 +65,12 @@ class  postac
 		//echo self::$sila;
     }
 }
-/*lass eliksir
-{
-    private $nazwa;
-    private $opis;
-    public function _Construct($nazwa, $opis)
-    {
-        $this->nazwa=$nazwa;
-        $this->opis=$opis;
-    }
-    function przedstaw_sie()
-    {
-        echo 'eliskir: ' . $opis;
-    }
-
-}*/
 class wiedzmin extends postac
 {
     private $obrona;
     private $eliksir;
     private $eliksir_poziom;
+    private $czas;
 	public function __Construct($szybkosc, $sila, $zrecznosc, $zycie)
 	{
 		parent::__Construct($szybkosc, $sila, $zrecznosc, $zycie);
@@ -79,6 +87,7 @@ class wiedzmin extends postac
             case 1:
                 $this->eliksir=1;
                 $this->eliksir_poziom=mt_rand(1,3);
+                echo '<br>' . $this->eliksir_poziom;
                 break;
             case 2:
                 $this->eliksir=2;
@@ -94,29 +103,59 @@ class wiedzmin extends postac
         }
 
     }
-	/*public function wypicie_eliksiru($eliksir)
+    private function formula($stat)
     {
+        $podstawa=parent::wez($stat);;
+        $finito=0;
+        $temp=0;
+        $temp=0.2*$this->eliksir_poziom;
+        $temp=$podstawa*$temp;
+        $finito=$podstawa+$temp;
+        $podstawa=parent::wez('zycie');
+        $podstawa-=2*$this->eliksir_poziom;
+        parent::zwieksz(-$podstawa, 4);
+        return $finito;
+
+    }
+	public function wypicie_eliksiru($eliksir)
+    {
+        $temp=0;
         switch($eliksir)
         {
             case 1:
-                $this->sila=$this->sila + $sila*($eliksir_poziom*10/100);
-                $this->zycie=$this->zycie - (zycie*10/100);
+                $temp=$this->formula('sila');
+                parent::zwieksz($temp, 2);
+                /*$asd=parent::wez('sila');
+                echo $asd . $temp;*/
                 break;
             case 2:
-                $this->zrecznosc=$this->zrecznosc + $zrecznosc*($eliksir_poziom*10/100);
-                $this->zycie=$this->zycie - (zycie*10/100);
+                $temp=$this->formula('szybkosc');
+                parent::zwieksz($temp, 1);
                 break;
             case 3:
-                $this->zycie = $this->zycie + $zycie*($eliksir_poziom*10/100);
+                $temp=parent::wez('zycie');
+                $z= $temp * $this->eliksir_poziom;
+                $z= $temp + $z;
+                if($z>$temp)
+                    parent::zwieksz($temp, 4);
+                else
+                    parent::zwieksz($z, 4);
 			break;
             default:
-                echo "wied�min co� pochendorzy� i zamiast eliksiru novigradzej �ytniej �ykn��";
+                echo "wiedźmin coś pochendorzył i zamiast eliksiru novigradzej żytniej łyknął";
                 break;
         }
-    }*/
+    }
     public function obrona()
     {
 
+    }
+}
+class stworek extends postac
+{
+    public function __Construct($szybkosc, $sila, $zrecznosc, $zycie)
+    {
+        parent::__Construct($szybkosc, $sila, $zrecznosc, $zycie);
     }
 }
 
@@ -125,6 +164,12 @@ $geralt = new wiedzmin(20, 15, 10, 5);
 //geralt->zwieksz(19);
 //$geralt->statystyki(20, 20, 20, 20);
 $geralt->przedstaw_sie();
-
+$qq = mt_rand(1,3);
+echo '<br>' . $qq;
+$geralt->sworzenie_eliksiru(1);
+echo '<br>';
+$geralt->wypicie_eliksiru(3);
+echo '<br>';
+$geralt->przedstaw_sie();
 
 ?>
