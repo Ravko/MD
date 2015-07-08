@@ -43,17 +43,26 @@ class  postac
     }
     public function atak($silaAtak, $zycieDef, $zrecznoscAtak, $zrecznoscDef)
     {
-        $szansa = mt_rand(100);
-		$SK= (($zrecznoscAtak-$zrecznoscDef) / $zrecznoscDef) * 100/100;
+        $szansa = mt_rand(1, 100);
+        //echo '<br>'.$szansa . '<br>' . $zrecznoscAtak . '<br>' ;
+        $tmp = $zrecznoscAtak-$zrecznoscDef;
+        if($tmp<=0)
+        {
+            $SK=10;
+        }
+        else
+        {
+            $SK= $tmp / $zrecznoscDef;
+        }
 		if($SK>90)
             $SK=90;
         else if($SK<10)
             $SK=10;
-		
+		//echo $SK . '<br>' ;
 		if($szansa>=$SK)
-            $zycieDef-=$silaAtak;
+           return $zycieDef - $silaAtak;
         else
-            echo 'pudlo';
+            echo 'pudło';
 	}
     public function koniec_tury()
     {
@@ -71,6 +80,7 @@ class wiedzmin extends postac
     private $eliksir;
     private $eliksir_poziom;
     private $czas;
+    private $bonus;
 	public function __Construct($szybkosc, $sila, $zrecznosc, $zycie)
 	{
 		parent::__Construct($szybkosc, $sila, $zrecznosc, $zycie);
@@ -80,22 +90,27 @@ class wiedzmin extends postac
         parent::_Construct($szybkosc, $sila, $zrecznosc, $zycie);
 
 	}
-    public function sworzenie_eliksiru ($random)
+    public  function qq()
     {
-        switch($random)
+        echo $this->eliksir;
+    }
+    public function sworzenie_eliksiru ($poziom)
+    {
+        $x=mt_rand(1,3);
+        switch($x)
         {
             case 1:
                 $this->eliksir=1;
-                $this->eliksir_poziom=mt_rand(1,3);
-                echo '<br>' . $this->eliksir_poziom;
+                $this->eliksir_poziom=$poziom;
+                echo '<br>' . $this->eliksir; // sprobuj return i przypisz
                 break;
             case 2:
                 $this->eliksir=2;
-                $this->eliksir_poziom=mt_rand(1,3);
+                $this->eliksir_poziom=$poziom;
                 break;
             case 3:
                 $this->eliksir=3;
-                $this->eliksir_poziom=mt_rand(1,3);
+                $this->eliksir_poziom=$poziom;
                 break;
             default:
                 echo "cos poszlo nie tak";
@@ -117,19 +132,24 @@ class wiedzmin extends postac
         return $finito;
 
     }
-	public function wypicie_eliksiru($eliksir)
+	public function wypicie_eliksiru()
     {
-        $temp=0;
-        switch($eliksir)
+        $temp=parent::wez('AP');
+        $temp-=1;
+        parent::zwieksz($temp, 5);
+        echo $this->eliksir;
+        switch($this->eliksir)
         {
             case 1:
                 $temp=$this->formula('sila');
                 parent::zwieksz($temp, 2);
+                $this->bonus=$temp;
                 /*$asd=parent::wez('sila');
                 echo $asd . $temp;*/
                 break;
             case 2:
                 $temp=$this->formula('szybkosc');
+                $this->bonus=$temp;
                 parent::zwieksz($temp, 1);
                 break;
             case 3:
@@ -161,15 +181,69 @@ class stworek extends postac
 
 echo "asd<br>";
 $geralt = new wiedzmin(20, 15, 10, 5);
+$zgredek = new stworek(10, 10, 10, 10);
 //geralt->zwieksz(19);
 //$geralt->statystyki(20, 20, 20, 20);
 $geralt->przedstaw_sie();
 $qq = mt_rand(1,3);
-echo '<br>' . $qq;
-$geralt->sworzenie_eliksiru(1);
 echo '<br>';
-$geralt->wypicie_eliksiru(3);
+$zgredek->przedstaw_sie();
+//$geralt->sworzenie_eliksiru(1);
+echo '<br>';
+//$geralt->qq();
+echo '<br>';
+//$geralt->wypicie_eliksiru();
 echo '<br>';
 $geralt->przedstaw_sie();
+$HpWiedzmin= $geralt->wez('zycie');
+$hpStworek= $zgredek->wez('zycie');
+//while ($HpWiedzmin>0 || $hpStworek>0)
+
+
+    ?>
+    <form action="" method="POST" name="wybor" id="wybor">
+   <select name="list">
+       <option value="1">Atak(-1)</option>
+       <option value="2">Stwórz eliksir 1-poziomu(-1)</option>
+       <option value="3">Stwórz eliksir 2-poziomu(-2)</option>
+       <option value="4">Stwórz eliksir 3-poziomu(-3)</option>
+       <option value="5">Wypicie eliksiru(-1)</option>
+       <option value="6">obrona(2)</option>
+       <option value="7">Pass(+1)</option>
+   </select>
+        <button type="submit">ok</button>
+    </form>
+<?php
+if(isset($_POST['list']))
+    $val=$_POST['list'];
+
+switch($val)
+{
+    case 1: //Atak
+$tp = $geralt->atak($geralt->wez('sila'), $geralt->wez('zycie') ,$geralt->wez('zrecznosc'), $zgredek->wez('zrecznosc') );
+if($tp<=0)
+    echo $tp."<br>Game Over";
+        $geralt->zwieksz($tp, 4);
+
+        break;
+    case 2:
+        $geralt->sworzenie_eliksiru(1);
+        break;
+    case 3:
+        $geralt->sworzenie_eliksiru(2);
+        break;
+    case 4:
+        $geralt->sworzenie_eliksiru(3);
+        break;
+    case 5:
+        $geralt->wypicie_eliksiru();
+        $geralt->qq();
+        $geralt->przedstaw_sie();
+        break;
+    default:
+        echo "ptaszki ćwierkają, żaby kumkają, a słońce poleciało";
+        break;
+
+}
 
 ?>
