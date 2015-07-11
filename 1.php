@@ -1,6 +1,6 @@
 <?php
-require_once 'index.php';
-
+//require_once 'index.php';
+session_start();
 ?>
 <form name="stworz" action="2.php" method="post" xmlns="http://www.w3.org/1999/html">
     <label>Siła:</label>

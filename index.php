@@ -5,7 +5,7 @@ class  postac
     private $sila;
     private $zrecznosc;
     private $zycie;
-    private $AP;
+    private static $AP=0;
     private $szansa;
 
     public function __Construct($szybkosc, $sila, $zrecznosc, $zycie)
@@ -15,6 +15,7 @@ class  postac
         $this->zrecznosc=$zrecznosc;
         $this->zycie=$zycie;
     }
+
 	public function zwieksz($ile, $co)
 	{
         switch($co)
@@ -40,6 +41,25 @@ class  postac
     public function  wez($statystyka)
     {
         return $this->$statystyka;
+    }
+    public function zacznij($zr1, $zr2)
+    {
+        if($zr1>=$zr2)
+        {
+            while($zr1-$zr2>0)
+            {
+                $this->AP++;
+            }
+            return 1;
+        }
+        else
+        {
+            while($zr2-$zr1>0)
+            {
+                $this->AP++;
+            }
+            return 0;
+        }
     }
     public function atak($silaAtak, $zycieDef, $zrecznoscAtak, $zrecznoscDef)
     {
@@ -81,6 +101,7 @@ class wiedzmin extends postac
     private $eliksir_poziom;
     private $czas;
     private $bonus;
+    private $ktory_bonus;
 	public function __Construct($szybkosc, $sila, $zrecznosc, $zycie)
 	{
 		parent::__Construct($szybkosc, $sila, $zrecznosc, $zycie);
@@ -106,16 +127,19 @@ class wiedzmin extends postac
             case 1:
                 $this->eliksir= 1;
                 $this->eliksir_poziom= $poziom;// sprobuj return i przypisz
+                echo 'Stworzyles eliksir grom!';
                 return 1;
                 break;
             case 2:
                 $this->eliksir= 2;
                 $this->eliksir_poziom= $poziom;
+                echo 'stworzyles eliksir zamiec';
                 return 2;
                 break;
             case 3:
                 $this->eliksir= 3;
                 $this->eliksir_poziom=$poziom;
+                echo 'stworzyles eliksir jaskółka';
                 return 3;
                 break;
             default:
@@ -138,6 +162,31 @@ class wiedzmin extends postac
         return $finito;
 
     }
+    private function ogarniacz($stat)
+    {
+        switch($stat)
+        {
+            case 'sila':
+                return 2;
+            break;
+            case 'szybkosc':
+                return 1;
+            //todo o ile potrzebne dodaj wiecej statsow...
+            default:
+                echo 'Ogarniacz nie ogarnął :(';
+        }
+    }
+    public function BonusCheck($runda)
+    {
+        if(($runda%4==0) && ($this->ktory_bonus != null))
+        {
+            echo $this->ktory_bonus;
+            $stat=parent::wez($this->ktory_bonus);
+            $ss=$stat;
+            $ss-=$this->bonus;
+            parent::zwieksz(-$ss,$this->ogarniacz($stat));
+        }
+    }
 	public function wypicie_eliksiru()
     {
         $temp=parent::wez('AP');
@@ -147,15 +196,19 @@ class wiedzmin extends postac
         switch($this->eliksir)
         {
             case 1:
+                echo 'test';
                 $temp=$this->formula('sila');
                 parent::zwieksz($temp, 2);
                 $this->bonus=$temp;
+                $this->ktory_bonus='sila';
+                echo $this->ktory_bonus;
                 /*$asd=parent::wez('sila');
                 echo $asd . $temp;*/
                 break;
             case 2:
                 $temp=$this->formula('szybkosc');
                 $this->bonus=$temp;
+                $this->ktory_bonus='szybkosc';
                 parent::zwieksz($temp, 1);
                 break;
             case 3:
@@ -188,28 +241,32 @@ class stworek extends postac
     }
 }
 session_start();
-  $geralt = new wiedzmin(20, 15, 10, 5);
-  $zgredek = new stworek(10, 10, 10, 50);
+ // $geralt = new wiedzmin(20, 15, 10, 5);
+ // $zgredek = new stworek(10, 10, 10, 50);
 
 /*}
 else
 {
     $geralt=unserialize($w);
     $zgredek=unserialize($z);
-}*/
+}*//*
 echo "zz";
+static $runda=0;
 //$geralt->sworzenie_eliksiru(3);
 //$geralt->qq();
 echo '<br>';
-$geralt= $_SESSION['obj'];
+//$geralt= $_SESSION['obj'];
+//$zgredek = $_SESSION['obj2'];
+$runda = $_SESSION['runda'];
+//echo var_dump($zgredek);
 echo '<br>';
 //$geralt->wypicie_eliksiru();
-echo '<br>';
+echo '<br>';*/
 
 //$geralt=$_SESSION['obj'];
 
-$geralt->qq();
-    ?>
+
+ /*   ?>
     <form action="" method="POST" name="wybor" id="wybor">
         <select name="list">
             <option value="1">Atak(-1)</option>
@@ -227,7 +284,8 @@ $geralt->qq();
 
 if (isset($_POST['list'])){
     $val = $_POST['list'];
-    global $qq;
+    $runda++;
+    echo $runda;
     $eliksir;
     echo $qq;
     switch ($val) {
@@ -264,14 +322,15 @@ if (isset($_POST['list'])){
             break;
 
     }}
-$_SESSION['obj'] = $geralt;
-echo var_dump($geralt);
+//$_SESSION['obj'] = $geralt;
+//$_SESSION['obj'] = $zgredek;
+$_SESSION['runda'] = $runda;
+//echo var_dump($geralt);
 echo "<br><br>";
-$geralt->qq();
-$geralt->przedstaw_sie();
+
 //$zgredek->przedstaw_sie();
 //$w = serialize($geralt);
 //$z = serialize($zgredek);
-
+*/
 
 ?>

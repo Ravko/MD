@@ -1,5 +1,6 @@
 <?php
 include 'index.php';
+session_start();
 $str=$_POST['str'];
 $agi=$_POST['agi'];
 $speed=$_POST['speed'];
@@ -17,8 +18,17 @@ $s=serialize($geralt);
 $zgred = serialize($zgredek);
 file_put_contents('store', $s);
 file_put_contents('potwor', $zgred);
+$_SESSION['obj'] = $geralt;
+$_SESSION['obj'] = $zgredek;
+$runda =0;
+$s=serialize($geralt);
+$zgred = serialize($zgredek);
+$r= serialize($runda);
+file_put_contents('store', $s);
+file_put_contents('potwor', $zgred);
+file_put_contents('runda', $r);
 
 ?>
-<form action="index.php">
+<form action="akcja.php">
     <button type="submit">ok</button>
 </form>
