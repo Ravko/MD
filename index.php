@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class  postac
 {
     private $szybkosc;
@@ -94,23 +94,29 @@ class wiedzmin extends postac
     {
         echo $this->eliksir;
     }
+    public  function setE($e)
+    {
+        $this->eliksir=$e;
+    }
     public function sworzenie_eliksiru ($poziom)
     {
         $x=mt_rand(1,3);
         switch($x)
         {
             case 1:
-                $this->eliksir=1;
-                $this->eliksir_poziom=$poziom;
-                echo '<br>' . $this->eliksir; // sprobuj return i przypisz
+                $this->eliksir= 1;
+                $this->eliksir_poziom= $poziom;// sprobuj return i przypisz
+                return 1;
                 break;
             case 2:
-                $this->eliksir=2;
-                $this->eliksir_poziom=$poziom;
+                $this->eliksir= 2;
+                $this->eliksir_poziom= $poziom;
+                return 2;
                 break;
             case 3:
-                $this->eliksir=3;
+                $this->eliksir= 3;
                 $this->eliksir_poziom=$poziom;
+                return 3;
                 break;
             default:
                 echo "cos poszlo nie tak";
@@ -137,7 +143,7 @@ class wiedzmin extends postac
         $temp=parent::wez('AP');
         $temp-=1;
         parent::zwieksz($temp, 5);
-        echo $this->eliksir;
+        //echo $this->eliksir;
         switch($this->eliksir)
         {
             case 1:
@@ -168,6 +174,9 @@ class wiedzmin extends postac
     }
     public function obrona()
     {
+        $temp=parent::wez(3);
+        $temp+=$temp;
+
 
     }
 }
@@ -178,72 +187,91 @@ class stworek extends postac
         parent::__Construct($szybkosc, $sila, $zrecznosc, $zycie);
     }
 }
+session_start();
+  $geralt = new wiedzmin(20, 15, 10, 5);
+  $zgredek = new stworek(10, 10, 10, 50);
 
-echo "asd<br>";
-$geralt = new wiedzmin(20, 15, 10, 5);
-$zgredek = new stworek(10, 10, 10, 10);
-//geralt->zwieksz(19);
-//$geralt->statystyki(20, 20, 20, 20);
-$geralt->przedstaw_sie();
-$qq = mt_rand(1,3);
-echo '<br>';
-$zgredek->przedstaw_sie();
-//$geralt->sworzenie_eliksiru(1);
-echo '<br>';
+/*}
+else
+{
+    $geralt=unserialize($w);
+    $zgredek=unserialize($z);
+}*/
+echo "zz";
+//$geralt->sworzenie_eliksiru(3);
 //$geralt->qq();
+echo '<br>';
+$geralt= $_SESSION['obj'];
 echo '<br>';
 //$geralt->wypicie_eliksiru();
 echo '<br>';
-$geralt->przedstaw_sie();
-$HpWiedzmin= $geralt->wez('zycie');
-$hpStworek= $zgredek->wez('zycie');
-//while ($HpWiedzmin>0 || $hpStworek>0)
 
+//$geralt=$_SESSION['obj'];
 
+$geralt->qq();
     ?>
     <form action="" method="POST" name="wybor" id="wybor">
-   <select name="list">
-       <option value="1">Atak(-1)</option>
-       <option value="2">Stwórz eliksir 1-poziomu(-1)</option>
-       <option value="3">Stwórz eliksir 2-poziomu(-2)</option>
-       <option value="4">Stwórz eliksir 3-poziomu(-3)</option>
-       <option value="5">Wypicie eliksiru(-1)</option>
-       <option value="6">obrona(2)</option>
-       <option value="7">Pass(+1)</option>
-   </select>
+        <select name="list">
+            <option value="1">Atak(-1)</option>
+            <option value="2">Stwórz eliksir 1-poziomu(-1)</option>
+            <option value="3">Stwórz eliksir 2-poziomu(-2)</option>
+            <option value="4">Stwórz eliksir 3-poziomu(-3)</option>
+            <option value="5">Wypicie eliksiru(-1)</option>
+            <option value="6">obrona(2)</option>
+            <option value="7">Pass(+1)</option>
+        </select>
         <button type="submit">ok</button>
     </form>
-<?php
-if(isset($_POST['list']))
-    $val=$_POST['list'];
+    <?php
 
-switch($val)
-{
-    case 1: //Atak
-$tp = $geralt->atak($geralt->wez('sila'), $geralt->wez('zycie') ,$geralt->wez('zrecznosc'), $zgredek->wez('zrecznosc') );
-if($tp<=0)
-    echo $tp."<br>Game Over";
-        $geralt->zwieksz($tp, 4);
 
-        break;
-    case 2:
-        $geralt->sworzenie_eliksiru(1);
-        break;
-    case 3:
-        $geralt->sworzenie_eliksiru(2);
-        break;
-    case 4:
-        $geralt->sworzenie_eliksiru(3);
-        break;
-    case 5:
-        $geralt->wypicie_eliksiru();
-        $geralt->qq();
-        $geralt->przedstaw_sie();
-        break;
-    default:
-        echo "ptaszki ćwierkają, żaby kumkają, a słońce poleciało";
-        break;
+if (isset($_POST['list'])){
+    $val = $_POST['list'];
+    global $qq;
+    $eliksir;
+    echo $qq;
+    switch ($val) {
+        case 1: //Atak
+            $tp = $geralt->atak($geralt->wez('sila'), $zgredek->wez('zycie'), $geralt->wez('zrecznosc'), $zgredek->wez('zrecznosc'));
+            if ($tp <= 0) {
+                echo $tp . "<br>Wygrałeś!";
+            }
+            else
+            {
+                $zgredek->zwieksz($tp, 4);
+            }
 
-}
+            break;
+        case 2:
+            $qq=$geralt->sworzenie_eliksiru(1);
+            $geralt->setE($qq);
+
+            break;
+        case 3:
+            $qq=$geralt->sworzenie_eliksiru(2);
+            $geralt->setE($qq);
+            break;
+        case 4:
+            $qq=$geralt->sworzenie_eliksiru(3);
+            $geralt->setE($qq);
+            break;
+        case 5:
+            $geralt->wypicie_eliksiru($qq);
+            $geralt->qq();
+            break;
+        default:
+            echo "ptaszki ćwierkają, żaby kumkają, a słońce poleciało";
+            break;
+
+    }}
+$_SESSION['obj'] = $geralt;
+echo var_dump($geralt);
+echo "<br><br>";
+$geralt->qq();
+$geralt->przedstaw_sie();
+//$zgredek->przedstaw_sie();
+//$w = serialize($geralt);
+//$z = serialize($zgredek);
+
 
 ?>
