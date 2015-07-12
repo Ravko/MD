@@ -33,7 +33,10 @@ file_put_contents('store', $s);
 file_put_contents('potwor', $zgred);
 file_put_contents('runda', $r);
 
+$start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+file_put_contents('start', $start);
+
 ?>
-<form action="akcja.php">
+<form action="efekt.php">
     <button type="submit">Zatwierdź</button>
 </form>

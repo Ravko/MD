@@ -48,24 +48,26 @@ class  postac
     {
         return $this->$statystyka;
     }
+    public function przydzielAP($zr1, $zr2)
+    {
+        $temp=$zr1;
+        $temp-=$zr2;
+        while($temp >=0)
+        {
+            $temp-=$zr2;
+            $this->AP++;
+        }
+        if ($this->AP == 0)
+            $this->AP++;
+    }
     public function zacznij($zr1, $zr2)
     {
         if($zr1>=$zr2)
         {
-            while($zr1-$zr2>0)
-            {
-                $zr1-=$zr2;
-                $this->AP++;
-            }
             return 1;
         }
         else
         {
-            while($zr2-$zr1>0)
-            {
-                $zr2-=$zr1;
-                $this->AP++;
-            }
             return 0;
         }
     }
@@ -89,20 +91,23 @@ class  postac
             $SK=10;
 		//echo $SK . '<br>' ;
 		if($szansa>=$SK)
-           return $zycieDef - $silaAtak;
+        {
+            echo '<p>Atak sie powiódł</p>';
+            return $zycieDef - $silaAtak;
+        }
         else
-            echo 'pudło';
+            echo '<p>pudło</p>';
 	}
     public function koniec_tury()
     {
-        $temp=parent::wez('AP');
+        $temp=$this->wez('AP');
         $temp+=1;
-        parent::zwieksz($temp, 5);
+        $this->zwieksz($temp, 5);
 
     }
 		public function przedstaw_sie()
     {
-        echo "AP:<br>" . $this->AP . "siła: " . $this->sila . "<br>zręczność: " . $this->zrecznosc . "<br>szybkość: " . $this->szybkosc . "<br>zycie: " . $this->zycie;
+        echo "AP: " . $this->AP . "<br>siła: " . $this->sila . "<br>zręczność: " . $this->zrecznosc . "<br>szybkość: " . $this->szybkosc . "<br>zycie: " . $this->zycie;
 		//echo self::$sila;
     }
 }
@@ -114,6 +119,7 @@ class wiedzmin extends postac
     private $czas;
     private $bonus;
     private $ktory_bonus;
+    private $obrona_bonus;
 	public function __Construct($szybkosc, $sila, $zrecznosc, $zycie)
 	{
 		parent::__Construct($szybkosc, $sila, $zrecznosc, $zycie);
@@ -130,9 +136,9 @@ class wiedzmin extends postac
     }
     public function sworzenie_eliksiru ($poziom)
     {
-        $temp=parent::wez(5);
+        $temp=parent::wez('AP');
         $temp-=1+$poziom;
-        parent::zwieksz($temp, 'AP');
+        parent::zwieksz($temp, 5);
         $x=mt_rand(1,3);
         switch($x)
         {
@@ -200,6 +206,17 @@ class wiedzmin extends postac
             $ss=$stat;
             $ss-=$this->bonus;
             parent::zwieksz($ss,$this->ogarniacz($this->ktory_bonus));
+            $this->ktory_bonus= null;
+        }
+    }
+    public function DefCheck()
+    {
+        if($this->obrona_bonus)
+        {
+            $temp=parent::wez('zrecznosc');
+            $temp=$temp/2;
+            parent::zwieksz($temp, 3);
+            $this->obrona_bonus = false;
         }
     }
 	public function wypicie_eliksiru()
@@ -215,7 +232,7 @@ class wiedzmin extends postac
                 parent::zwieksz($temp, 2);
                 //$this->bonus=$temp;
                 $this->ktory_bonus='sila';
-                echo $this->ktory_bonus;
+                //echo $this->ktory_bonus;
                 /*$asd=parent::wez('sila');
                 echo $asd . $temp;*/
                 break;
@@ -226,9 +243,11 @@ class wiedzmin extends postac
                 parent::zwieksz($temp, 1);
                 break;
             case 3:
-                $temp=parent::wez('zycie');
+                $temp=parent::wez('sila');
                 $z= $temp * $this->eliksir_poziom;
                 $z= $temp + $z;
+                $temp=parent::wez('zycie');
+                $z+=$temp;
                 if($z>$temp)
                     parent::zwieksz($temp, 4);
                 else
@@ -246,9 +265,10 @@ class wiedzmin extends postac
         $temp=parent::wez('AP');
         $temp-=2;
         parent::zwieksz($temp, 5);
-        $temp=parent::wez(3);
+        $temp=parent::wez('zrecznosc');
         $temp+=$temp;
-
+        parent::zwieksz($temp, 3);
+        $this->obrona_bonus = true;
 
     }
 }

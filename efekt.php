@@ -6,19 +6,28 @@ static $runda=0;
 $s = file_get_contents('store');
 $a = file_get_contents('potwor');
 $ro = file_get_contents('runda');
+$ss = file_get_contents('start');
 $geralt = unserialize($s);
 $zgredek = unserialize($a);
 $runda= unserialize($ro);
-$geralt->przedstaw_sie();
-echo "<br>";
-$zgredek->przedstaw_sie();
-$start = $geralt->zacznij($geralt->wez('zrecznosc'), $zgredek->wez('zrecznosc'));
+$start= unserialize($ss);
 
+//$start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+if($geralt->wez('AP')<=0)
+    $start=0;
 
+if($geralt->wez('AP')<=0 && $zgredek->wez('AP')<=0)
+{
+    $start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+    $geralt->przydzielAP($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+    $zgredek->przydzielAP($zgredek->wez('szybkosc'), $geralt->wez('szybkosc'));
+};
+echo $start;
 
 if($start==1) {
     /** @var TYPE_NAME $geralt */
-   $geralt->BonusCheck($runda);
+    $geralt->BonusCheck($runda);
+    $geralt->DefCheck();
     ?>
     <form action="efekt.php" method="POST" name="wybor" id="wybor">
         <select name="list">
@@ -83,20 +92,32 @@ if($start==1) {
 }
 else
 {
-    $dmg= $zgredek->atak($zgredek->wez('sila'), $geralt->wez('zycie'), $zgredek->wez('zrecznosc'), $geralt->wez('zrecznosc'));
-    if ($dmg <= 0) {
-        echo $dmg . "<p> Przegrałeś!</p>";
-        $zgredek->zwieksz($dmg, 4);
-    } else {
-        $zgredek->zwieksz($dmg, 4);
+    if ($zgredek->wez('AP')<=0)
+        $start=1;
+    while($zgredek->wez('AP')>0)
+    {
+        echo '<p> Stworek atakuje! </p>';
+        $dmg = $zgredek->atak($zgredek->wez('sila'), $geralt->wez('zycie'), $zgredek->wez('zrecznosc'), $geralt->wez('zrecznosc'));
+        if ($dmg <= 0) {
+            echo $dmg . "<p> Przegrałeś!</p>";
+            $zgredek->zwieksz($dmg, 4);
+        } else {
+            $zgredek->zwieksz($dmg, 4);
+        }
     }
 
 }
+echo '<p>';
+$geralt->przedstaw_sie();
+echo "</p><p>";
 $zgredek->przedstaw_sie();
+echo '</p>';
 $s=serialize($geralt);
 $zgred = serialize($zgredek);
 $r= serialize($runda);
+$st=serialize($start);
 file_put_contents('store', $s);
 file_put_contents('potwor', $zgred);
 file_put_contents('runda', $r);
+file_put_contents('start', $st);
 ?>

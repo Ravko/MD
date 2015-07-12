@@ -27,3 +27,10 @@ session_start();
     <input name="live_zgredek" type="text"> </input>
     <button type="submit">Zatwierdź</button>
 </form>
+
+<br><br><br>
+<p>
+    <form>
+    <button type="submit">Użyj gotowych</button>
+</form>
+</p>
