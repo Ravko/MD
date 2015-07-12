@@ -1,5 +1,7 @@
 <?php
-include 'index.php';
+header('Content-type: text/html; charset=utf-8');
+
+include 'klasa.php';
 static $runda=0;
 $s = file_get_contents('store');
 $a = file_get_contents('potwor');
@@ -8,13 +10,15 @@ $geralt = unserialize($s);
 $zgredek = unserialize($a);
 $runda= unserialize($ro);
 $geralt->przedstaw_sie();
+echo "<br>";
 $zgredek->przedstaw_sie();
 $start = $geralt->zacznij($geralt->wez('zrecznosc'), $zgredek->wez('zrecznosc'));
 
-$geralt->wypicie_eliksiru();
+
 
 if($start==1) {
-    $geralt->BonusCheck($runda);
+    /** @var TYPE_NAME $geralt */
+   $geralt->BonusCheck($runda);
     ?>
     <form action="efekt.php" method="POST" name="wybor" id="wybor">
         <select name="list">
@@ -32,7 +36,9 @@ if($start==1) {
     if (isset($_POST['list'])) {
         $val = $_POST['list'];
         $runda++;
+        echo "Runda";
         echo $runda;
+        echo "<br>";
         switch ($val) {
             case 1: //Atak
                 $tp = $geralt->atak($geralt->wez('sila'), $zgredek->wez('zycie'), $geralt->wez('zrecznosc'), $zgredek->wez('zrecznosc'));
@@ -59,12 +65,12 @@ if($start==1) {
                 break;
             case 5:
                 $geralt->wypicie_eliksiru();
-                $geralt->qq();
                 break;
             case 6:
                 $geralt->obrona();
                 break;
             case 7:
+                $geralt->koniec_tury();
                 $runda++;
                 break;
 
@@ -78,6 +84,13 @@ if($start==1) {
 else
 {
     $dmg= $zgredek->atak($zgredek->wez('sila'), $geralt->wez('zycie'), $zgredek->wez('zrecznosc'), $geralt->wez('zrecznosc'));
+    if ($dmg <= 0) {
+        echo $dmg . "<p> Przegrałeś!</p>";
+        $zgredek->zwieksz($dmg, 4);
+    } else {
+        $zgredek->zwieksz($dmg, 4);
+    }
+
 }
 $zgredek->przedstaw_sie();
 $s=serialize($geralt);

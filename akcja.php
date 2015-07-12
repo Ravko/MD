@@ -11,6 +11,7 @@
     <button type="submit">ok</button>
 </form>
 <?php
-include "index.php";
+header('Content-type: text/html; charset=utf-8');
+include "klasa.php";
 
 ?>
