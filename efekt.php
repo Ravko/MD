@@ -13,15 +13,9 @@ $runda= unserialize($ro);
 $start= unserialize($ss);
 
 //$start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
-if($geralt->wez('AP')<=0)
-    $start=0;
 
-if($geralt->wez('AP')<=0 && $zgredek->wez('AP')<=0)
-{
-    $start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
-    $geralt->przydzielAP($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
-    $zgredek->przydzielAP($zgredek->wez('szybkosc'), $geralt->wez('szybkosc'));
-};
+
+
 echo $start;
 
 if($start==1) {
@@ -44,7 +38,7 @@ if($start==1) {
     <?php
     if (isset($_POST['list'])) {
         $val = $_POST['list'];
-        $runda++;
+
         echo "Runda";
         echo $runda;
         echo "<br>";
@@ -81,6 +75,7 @@ if($start==1) {
             case 7:
                 $geralt->koniec_tury();
                 $runda++;
+                $start=0;
                 break;
 
             default:
@@ -100,13 +95,28 @@ else
         $dmg = $zgredek->atak($zgredek->wez('sila'), $geralt->wez('zycie'), $zgredek->wez('zrecznosc'), $geralt->wez('zrecznosc'));
         if ($dmg <= 0) {
             echo $dmg . "<p> Przegrałeś!</p>";
-            $zgredek->zwieksz($dmg, 4);
+            $geralt->zwieksz($dmg, 4);
         } else {
-            $zgredek->zwieksz($dmg, 4);
+            $geralt->zwieksz($dmg, 4);
         }
     }
+    ?>
+    <form action="">
+        <button type="submit">ok</button>
+    </form>
+<?php
 
 }
+
+if($geralt->wez('AP')<=0)
+    $start=0;
+if(($geralt->wez('AP')<=0) && ($zgredek->wez('AP')<=0))
+{
+    $runda++;
+    $start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+    $geralt->przydzielAP($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+    $zgredek->przydzielAP($zgredek->wez('szybkosc'), $geralt->wez('szybkosc'));
+};
 echo '<p>';
 $geralt->przedstaw_sie();
 echo "</p><p>";

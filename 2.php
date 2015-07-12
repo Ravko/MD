@@ -34,6 +34,7 @@ file_put_contents('potwor', $zgred);
 file_put_contents('runda', $r);
 
 $start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
+$start = serialize($start);
 file_put_contents('start', $start);
 
 ?>

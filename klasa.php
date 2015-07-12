@@ -96,7 +96,10 @@ class  postac
             return $zycieDef - $silaAtak;
         }
         else
+        {
             echo '<p>pudło</p>';
+            return $zrecznoscDef;
+        }
 	}
     public function koniec_tury()
     {
