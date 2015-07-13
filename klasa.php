@@ -127,7 +127,7 @@ class  postac
         else
         {
             echo '<p>pudło</p>';
-            return $zrecznoscDef;
+            return $zycieDef;
         }
 	}
 
