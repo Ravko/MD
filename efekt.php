@@ -49,6 +49,7 @@ if($start==1) {
                     echo $tp . "<br>Wygrałeś!";
                     $zgredek->zwieksz($tp, 4);
                 } else {
+                    echo $tp;
                     $zgredek->zwieksz($tp, 4);
                 }
 
@@ -97,6 +98,7 @@ else
             echo $dmg . "<p> Przegrałeś!</p>";
             $geralt->zwieksz($dmg, 4);
         } else {
+            echo $dmg;
             $geralt->zwieksz($dmg, 4);
         }
     }
