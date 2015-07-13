@@ -1,5 +1,9 @@
 ﻿<?php
 header('Content-type: text/html; charset=utf-8');
+
+/** główna klasa rodzic
+ * Class postac
+ */
 class  postac
 {
     private $szybkosc;
@@ -151,6 +155,10 @@ class  postac
 		//echo self::$sila;
     }
 }
+
+/** klasa wiedzmin dziedziczy z postaci
+ * Class wiedzmin
+ */
 class wiedzmin extends postac
 {
     private $obrona;
@@ -354,6 +362,10 @@ class wiedzmin extends postac
 
     }
 }
+
+/** klasa potwora, dziedziczy z postaci
+ * Class stworek
+ */
 class stworek extends postac
 {
     /** Konstruktor
