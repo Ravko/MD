@@ -37,6 +37,11 @@ $start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
 $start = serialize($start);
 file_put_contents('start', $start);
 
+$_SESSION['geralt'] = $s;
+$_SESSION['zgredek'] = $zgred;
+$_SESSION['runda'] = $r;
+$_SESSION['start'] = $start;
+
 ?>
 <form action="efekt.php">
     <button type="submit">Zatwierdź</button>

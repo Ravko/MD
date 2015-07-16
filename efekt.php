@@ -3,14 +3,20 @@ header('Content-type: text/html; charset=utf-8');
 
 include 'klasa.php';
 static $runda=0;
-$s = file_get_contents('store');
+/*$s = file_get_contents('store');
 $a = file_get_contents('potwor');
 $ro = file_get_contents('runda');
 $ss = file_get_contents('start');
 $geralt = unserialize($s);
 $zgredek = unserialize($a);
 $runda= unserialize($ro);
-$start= unserialize($ss);
+$start= unserialize($ss);*/
+
+$geralt = unserialize($_SESSION['geralt']);
+$zgredek = unserialize($_SESSION['zgredek']);
+$runda = unserialize($_SESSION['runda']);
+$start = unserialize($_SESSION['start']);
+
 
 //$start=$geralt->zacznij($geralt->wez('szybkosc'), $zgredek->wez('szybkosc'));
 
@@ -124,6 +130,13 @@ $geralt->przedstaw_sie();
 echo "</p><p>";
 $zgredek->przedstaw_sie();
 echo '</p>';
+
+$_SESSION['geralt'] = serialize($geralt);
+$_SESSION['zgredek'] = serialize(($zgredek));
+$_SESSION['start'] = serialize($start);
+$_SESSION['runda'] = serialize($start);
+
+/*
 $s=serialize($geralt);
 $zgred = serialize($zgredek);
 $r= serialize($runda);
@@ -131,5 +144,5 @@ $st=serialize($start);
 file_put_contents('store', $s);
 file_put_contents('potwor', $zgred);
 file_put_contents('runda', $r);
-file_put_contents('start', $st);
+file_put_contents('start', $st);*/
 ?>
